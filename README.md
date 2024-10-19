@@ -1,4 +1,13 @@
 
+## tl;dr:
+
+- Using the `GITHUB_TOKEN` works, __but__ it won't trigger any following Workflows. You can still use this if you don't build any code on GitHub anyways.
+
+- Secret must be set under `Secrets and Variables > Dependabot`
+
+- The created Pull Request is merged _without_ checking if build is passing. To merge only if build is passing, configure a Ruleset for the default branch and enable _Require status checks to pass_.
+
+
 ## Findings
 
 - Using the `GITHUB_TOKEN` works, __but__ it won't trigger any following Workflows. You can still use this if you don't build any code on GitHub anyways.
