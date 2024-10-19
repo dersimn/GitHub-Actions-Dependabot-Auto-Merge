@@ -21,6 +21,14 @@ jobs:
   dummy:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
       - name: Dummy Echo
         run: |
           echo Möp
+      # simulate a failing/succeeding build
+      - name: Dummy Build
+        run: |
+          if grep -q "yes" should-fail; then
+            exit 1
+          fi
