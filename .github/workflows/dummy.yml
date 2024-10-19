@@ -1,0 +1,26 @@
+name: Dummy Workflow
+run-name: ${{ github.ref_name }} (${{github.ref_type}}, triggered by ${{ github.event_name }})
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      # Run on every branch
+      - '**'
+      # Except branches beginning with:
+      - '!fail/**'
+      - '!dead-end/**'
+      - '!trash/**'
+      - '!dependabot/**'  # avoid running Workflow twice, because Dependabot creates a branch ("push" event) and a pull request)
+    tags:
+      - '**'
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  dummy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dummy Echo
+        run: |
+          echo Möp
