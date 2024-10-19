@@ -32,3 +32,29 @@ jobs:
           if grep -q "yes" should-fail; then
             exit 1
           fi
+      - name: Dummy Deployment
+        if: github.event_name != 'pull_request'
+        run: |
+          echo "Stuff has been deployed"
+
+  dependabot-auto-merge:
+    needs: dummy
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          # Using GITHUB_TOKEN __won't__ trigger following Workflows
+          # see: https://github.com/orgs/community/discussions/55906
+          #GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
