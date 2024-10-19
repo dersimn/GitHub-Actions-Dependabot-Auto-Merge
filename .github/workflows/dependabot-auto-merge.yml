@@ -2,7 +2,7 @@ name: Dependabot Auto-Merge
 run-name: ${{ github.ref_name }} (${{github.ref_type}}, triggered by ${{ github.event_name }})
 
 on:
-  pull_request_target:  # https://github.com/dependabot/dependabot-core/issues/3253
+  pull_request:
 
 permissions:
   contents: write
@@ -17,9 +17,12 @@ jobs:
         id: metadata
         uses: dependabot/fetch-metadata@v2
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
+          github-token: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
       - name: Enable auto-merge for Dependabot PRs
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          # Using GITHUB_TOKEN __won't__ trigger following Workflows
+          # see: https://github.com/orgs/community/discussions/55906
+          #GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
